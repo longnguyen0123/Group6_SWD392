@@ -1,0 +1,534 @@
+{
+  "bikeModels": [
+    {
+      "id": "model_basic",
+      "modelName": "Smart Bike Basic",
+      "description": "Includes GPS and smart lock.",
+      "hasGPS": true,
+      "hasSpeedSensor": false,
+      "hasAntiTheft": false,
+      "hasSolarPanel": false
+    },
+    {
+      "id": "model_plus",
+      "modelName": "Smart Bike Plus",
+      "description": "Adds speed sensor, anti-theft function, and trip report.",
+      "hasGPS": true,
+      "hasSpeedSensor": true,
+      "hasAntiTheft": true,
+      "hasSolarPanel": false
+    },
+    {
+      "id": "model_pro",
+      "modelName": "Smart Bike Pro",
+      "description": "Adds solar energy charging and phone charging.",
+      "hasGPS": true,
+      "hasSpeedSensor": true,
+      "hasAntiTheft": true,
+      "hasSolarPanel": true
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "fullName": "Nguyen Van A (Student)",
+      "email": "student@fpt.edu.vn",
+      "password": "123",
+      "role": "Student",
+      "status": "Active",
+      "balance": 9.75,
+      "credential": {
+        "fileName": "488896203_1235894281872404_5606092688938293598_n.jpg",
+        "uploadedAt": "2025-11-04T05:57:06.946Z"
+      }
+    },
+    {
+      "id": "2",
+      "fullName": "Tran Thi B (Student)",
+      "email": "student2@fpt.edu.vn",
+      "password": "123",
+      "role": "Student",
+      "status": "Active",
+      "balance": 10
+    },
+    {
+      "id": "101",
+      "fullName": "Le Van C (Admin)",
+      "email": "admin@fpt.edu.vn",
+      "password": "123",
+      "role": "Admin",
+      "status": "Active",
+      "balance": 0
+    },
+    {
+      "id": "102",
+      "fullName": "Pham Thi D (Technician)",
+      "email": "tech@fpt.edu.vn",
+      "password": "123",
+      "role": "Technician",
+      "status": "Active",
+      "balance": 10
+    }
+  ],
+  "bikes": [
+    {
+      "id": "SBE-001",
+      "modelId": "model_basic",
+      "status": "Active",
+      "batteryLevel": 100,
+      "lastLocation": "10.8141, 106.6668",
+      "currentUserId": null,
+      "currentTripId": null,
+      "isAntiTheftActive": false
+    },
+    {
+      "id": "SBE-002",
+      "modelId": "model_basic",
+      "status": "Active",
+      "batteryLevel": 92,
+      "lastLocation": "10.8139, 106.6675",
+      "currentUserId": null,
+      "isAntiTheftActive": false
+    },
+    {
+      "id": "SBE-003",
+      "modelId": "model_plus",
+      "status": "Active",
+      "batteryLevel": 100,
+      "lastLocation": "10.8145, 106.6680",
+      "isAntiTheftActive": false
+    },
+    {
+      "id": "SBE-004",
+      "modelId": "model_pro",
+      "status": "Maintenance",
+      "batteryLevel": 40,
+      "lastLocation": "10.8150, 106.6682",
+      "isAntiTheftActive": false
+    },
+    {
+      "id": "SBE-005",
+      "modelId": "model_pro",
+      "status": "Active",
+      "batteryLevel": 100,
+      "lastLocation": "10.8142, 106.6690",
+      "isAntiTheftActive": false
+    }
+  ],
+  "trips": [
+    {
+      "id": "trip_001",
+      "bikeId": "SBE-001",
+      "userId": 1,
+      "startTime": "2025-11-03T10:00:00Z",
+      "endTime": "2025-11-03T10:15:00Z",
+      "distance": 2.5,
+      "avgSpeed": 10,
+      "routeSummary": "Route from A to B"
+    },
+    {
+      "id": "trip_002",
+      "bikeId": "SBE-002",
+      "userId": 2,
+      "startTime": "2025-11-03T11:00:00Z",
+      "endTime": "2025-11-03T11:30:00Z",
+      "distance": 4.1,
+      "avgSpeed": 8.2,
+      "routeSummary": "Route from C to D"
+    },
+    {
+      "id": "trip_003",
+      "bikeId": "SBE-001",
+      "userId": 1,
+      "startTime": "2025-11-03T14:00:00Z",
+      "endTime": "2025-11-03T14:10:00Z",
+      "distance": 1.2,
+      "avgSpeed": 7.2,
+      "routeSummary": "Route from B to E"
+    },
+    {
+      "id": "trip_1762231950415",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-04T04:52:30.415Z",
+      "endTime": "2025-11-04T04:52:34.657Z"
+    },
+    {
+      "id": "trip_1762231955993",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-04T04:52:35.993Z",
+      "endTime": "2025-11-04T04:52:43.377Z"
+    },
+    {
+      "id": "trip_1762231965655",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-04T04:52:45.655Z",
+      "endTime": "2025-11-04T04:52:46.871Z"
+    },
+    {
+      "id": "trip_1762327840440",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-05T07:30:40.440Z",
+      "endTime": "2025-11-05T07:30:43.572Z"
+    },
+    {
+      "id": "trip_1762359626637",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-05T16:20:26.637Z",
+      "endTime": "2025-11-05T16:20:44.645Z"
+    },
+    {
+      "id": "trip_1762360049492",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-05T16:27:29.492Z"
+    },
+    {
+      "id": "trip_1762360525041",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-05T16:35:25.041Z",
+      "endTime": "2025-11-05T16:35:28.017Z"
+    },
+    {
+      "id": "trip_1762361682942",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-05T16:54:42.942Z",
+      "endTime": "2025-11-05T16:54:45.356Z"
+    },
+    {
+      "id": "trip_1762440262149",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-06T14:44:22.149Z",
+      "endTime": "2025-11-06T14:44:44.136Z"
+    }
+  ],
+  "maintenance": [
+    {
+      "id": "maint_001",
+      "bikeId": "SBE-004",
+      "technicianId": 102,
+      "description": "Solar panel connection loose.",
+      "date": "2025-11-03",
+      "cost": 0,
+      "status": "Completed"
+    },
+    {
+      "id": "maint_002",
+      "bikeId": "SBE-001",
+      "technicianId": null,
+      "description": "Brakes feel soft, need inspection.",
+      "date": "2025-11-05",
+      "cost": 0,
+      "status": "Completed"
+    },
+    {
+      "id": "maint_003",
+      "bikeId": "SBE-003",
+      "technicianId": 102,
+      "description": "Battery draining faster than normal.",
+      "date": "2025-11-06",
+      "cost": 0,
+      "status": "Completed"
+    },
+    {
+      "id": "maint_1762437614646",
+      "bikeId": "SBE-001",
+      "technicianId": 102,
+      "description": "out of battery",
+      "date": "2025-11-06",
+      "status": "Completed"
+    },
+    {
+      "id": "maint_1762440582460",
+      "bikeId": "SBE-001",
+      "technicianId": 102,
+      "description": "[AUTO-LOCK] Locked by Anti-Theft system. Needs inspection.",
+      "date": "2025-11-06",
+      "status": "Completed"
+    },
+    {
+      "id": "maint_1762441217214",
+      "bikeId": "SBE-001",
+      "technicianId": 102,
+      "description": "[Flat Tire] ",
+      "date": "2025-11-06",
+      "status": "Completed"
+    },
+    {
+      "id": "maint_1762442035270",
+      "bikeId": "SBE-001",
+      "technicianId": 102,
+      "description": "[Broken Lock] ",
+      "date": "2025-11-06",
+      "status": "Completed"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "alert_001",
+      "bikeId": "SBE-003",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-03T05:00:00Z",
+      "description": "Abnormal movement detected while locked.",
+      "resolved": true
+    },
+    {
+      "id": "alert_002",
+      "bikeId": "SBE-001",
+      "alertType": "Low Battery",
+      "timestamp": "2025-11-05T10:00:00Z",
+      "description": "Battery below 15%.",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762231957401",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-04T04:52:37.401Z",
+      "description": "Anti-theft activated by user",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762231960409",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-04T04:52:40.409Z",
+      "description": "Anti-theft activated by user",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762358610532",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-05T16:03:30.532Z",
+      "description": "Anti-Theft activated by user (Simulated Movement)",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762358781641",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-05T16:06:21.641Z",
+      "description": "Anti-Theft activated by user (Simulated Movement)",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762359063171",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-05T16:11:03.171Z",
+      "description": "Unauthorized movement detected!",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762359199239",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-05T16:13:19.239Z",
+      "description": "Unauthorized movement detected!",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762360063255",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-05T16:27:43.255Z",
+      "description": "Anti-theft activated by user",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762360538736",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-05T16:35:38.736Z",
+      "description": "Unauthorized movement detected!",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762440334013",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-06T14:45:34.013Z",
+      "description": "Unauthorized movement detected!",
+      "resolved": true
+    },
+    {
+      "id": "alert_1762440582460",
+      "bikeId": "SBE-001",
+      "alertType": "Anti-Theft",
+      "timestamp": "2025-11-06T14:49:42.460Z",
+      "description": "Unauthorized movement detected!",
+      "resolved": true
+    }
+  ],
+  "announcements": [
+    {
+      "id": "ann_001",
+      "title": "Welcome to SBE",
+      "content": "System launched. Ride safely!",
+      "visible": true,
+      "createdAt": "2025-11-03T08:00:00Z"
+    },
+    {
+      "id": "ann_1762232525082",
+      "title": "Quan trọng",
+      "content": "Cảnh báo v/v tình trạng trộm cắp diễn ra phức tạp",
+      "visible": true,
+      "createdAt": "2025-11-04T05:02:05.082Z"
+    }
+  ],
+  "lostReports": [
+    {
+      "id": "report_001",
+      "bikeId": "SBE-004",
+      "userId": "1",
+      "description": "Can't find bike since yesterday.",
+      "status": "Resolved",
+      "createdAt": "2025-11-04T09:00:00Z"
+    },
+    {
+      "id": "report_1762233394673",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "description": "Bike missing since...",
+      "status": "Resolved",
+      "createdAt": "2025-11-04T05:16:34.673Z"
+    },
+    {
+      "id": "report_1762354268945",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "description": "Bike missing since yesterday",
+      "status": "Resolved",
+      "createdAt": "2025-11-05T14:51:08.945Z"
+    }
+  ],
+  "payments": [
+    {
+      "id": "pay_001",
+      "userId": "1",
+      "tripId": "trip_001",
+      "amount": 2.5,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-03T10:20:00Z"
+    },
+    {
+      "id": "pay_1762231954670",
+      "userId": "1",
+      "tripId": "trip_1762231950415",
+      "amount": 0.05,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-04T04:52:34.670Z"
+    },
+    {
+      "id": "pay_1762231963388",
+      "userId": "1",
+      "tripId": "trip_1762231955993",
+      "amount": 0.05,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-04T04:52:43.388Z"
+    },
+    {
+      "id": "pay_1762231966881",
+      "userId": "1",
+      "tripId": "trip_1762231965655",
+      "amount": 0.05,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-04T04:52:46.881Z"
+    },
+    {
+      "id": "pay_1762327843582",
+      "userId": "1",
+      "tripId": "trip_1762327840440",
+      "amount": 0.05,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-05T07:30:43.582Z"
+    },
+    {
+      "id": "pay_1762359644653",
+      "userId": "1",
+      "tripId": "trip_1762359626637",
+      "amount": 0.05,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-05T16:20:44.653Z"
+    },
+    {
+      "id": "pay_1762360528026",
+      "userId": "1",
+      "tripId": "trip_1762360525041",
+      "amount": 0.05,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-05T16:35:28.026Z"
+    },
+    {
+      "id": "pay_1762361685368",
+      "userId": "1",
+      "tripId": "trip_1762361682942",
+      "amount": 0.05,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-05T16:54:45.368Z"
+    },
+    {
+      "id": "pay_1762440284147",
+      "userId": "1",
+      "tripId": "trip_1762440262149",
+      "amount": 0.05,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-06T14:44:44.147Z"
+    }
+  ],
+  "geofences": [
+    {
+      "id": "geo_001",
+      "name": "FPT University (Hoa Lac)",
+      "areaType": "Campus",
+      "alertOnExit": true,
+      "geoJson": {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            105.5267,
+            21.0136
+          ]
+        },
+        "radius": 1000
+      }
+    },
+    {
+      "id": "geo_002",
+      "name": "Library (No-Parking Zone)",
+      "areaType": "No-Parking",
+      "alertOnExit": false,
+      "geoJson": {
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            105.527,
+            21.014
+          ]
+        },
+        "radius": 50
+      }
+    }
+  ]
+}

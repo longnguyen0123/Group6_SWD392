@@ -10,8 +10,9 @@ root.render(
     <App />
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+//Chuột phải vào folder sbe-demo mở Terminal
+//chạy lệnh: npm i
+//chạy lệnh: json-server --watch db.json --port 3001
+//Mở 1 Terminal nữa
+//chạy lệnh: npm start
