@@ -18,11 +18,19 @@ L.Icon.Default.mergeOptions({
 // ----------------------------------------------------
 
 
-// Tọa độ trung tâm FPT (Hòa Lạc)
-const centerPosition = [21.0136, 105.5267]; 
+// Tọa độ trung tâm FPT (Hòa Lạc) - dùng làm fallback
+const defaultCenterPosition = [21.0136, 105.5267]; 
 // (Nếu là FPT HCM, đổi thành [10.814, 106.667])
 
 function BikeMap({ bikes }) {
+
+    // Simple bike emoji marker for demo
+    const bikeDivIcon = L.divIcon({
+        html: '<div style="font-size:24px; line-height:24px;">🚲</div>',
+        className: 'bike-div-icon',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+    });
 
     // Hàm chuyển đổi tọa độ text sang [lat, lng]
     const parseLocation = (locationStr) => {
@@ -41,9 +49,15 @@ function BikeMap({ bikes }) {
         }
     };
 
+    // Tính center: ưu tiên vị trí chiếc xe đầu tiên có tọa độ hợp lệ
+    const firstValidPos = Array.isArray(bikes)
+        ? bikes.map(b => parseLocation(b.lastLocation)).find(p => Array.isArray(p))
+        : null;
+    const mapCenter = firstValidPos || defaultCenterPosition;
+
     return (
         <div className="map-container">
-            <MapContainer center={centerPosition} zoom={16} style={{ height: '100%', width: '100%' }}>
+            <MapContainer center={mapCenter} zoom={16} style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -57,7 +71,7 @@ function BikeMap({ bikes }) {
                     if (!position) return null; 
 
                     return (
-                        <Marker key={bike.id} position={position}>
+                        <Marker key={bike.id} position={position} icon={bikeDivIcon}>
                             <Popup>
                                 <b>Bike ID: {bike.id}</b><br />
                                 Status: {bike.status}<br />

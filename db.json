@@ -7,7 +7,9 @@
       "hasGPS": true,
       "hasSpeedSensor": false,
       "hasAntiTheft": false,
-      "hasSolarPanel": false
+      "hasSolarPanel": false,
+      "hasPhoneCharging": false,
+      "hasMobileApp": true
     },
     {
       "id": "model_plus",
@@ -16,7 +18,9 @@
       "hasGPS": true,
       "hasSpeedSensor": true,
       "hasAntiTheft": true,
-      "hasSolarPanel": false
+      "hasSolarPanel": false,
+      "hasPhoneCharging": false,
+      "hasMobileApp": true
     },
     {
       "id": "model_pro",
@@ -25,7 +29,9 @@
       "hasGPS": true,
       "hasSpeedSensor": true,
       "hasAntiTheft": true,
-      "hasSolarPanel": true
+      "hasSolarPanel": true,
+      "hasPhoneCharging": true,
+      "hasMobileApp": true
     }
   ],
   "users": [
@@ -36,11 +42,12 @@
       "password": "123",
       "role": "Student",
       "status": "Active",
-      "balance": 9.75,
+      "balance": 9.25,
       "credential": {
         "fileName": "488896203_1235894281872404_5606092688938293598_n.jpg",
         "uploadedAt": "2025-11-04T05:57:06.946Z"
-      }
+      },
+      "assignedBikeId": "SBE-001"
     },
     {
       "id": "2",
@@ -49,7 +56,8 @@
       "password": "123",
       "role": "Student",
       "status": "Active",
-      "balance": 10
+      "balance": 10,
+      "assignedBikeId": "SBE-002"
     },
     {
       "id": "101",
@@ -58,7 +66,8 @@
       "password": "123",
       "role": "Admin",
       "status": "Active",
-      "balance": 0
+      "balance": 0,
+      "assignedBikeId": "SBE-004"
     },
     {
       "id": "102",
@@ -67,7 +76,8 @@
       "password": "123",
       "role": "Technician",
       "status": "Active",
-      "balance": 10
+      "balance": 10,
+      "assignedBikeId": "SBE-005"
     }
   ],
   "bikes": [
@@ -76,7 +86,7 @@
       "modelId": "model_basic",
       "status": "Active",
       "batteryLevel": 100,
-      "lastLocation": "10.8141, 106.6668",
+      "lastLocation": "21.0138, 105.5269",
       "currentUserId": null,
       "currentTripId": null,
       "isAntiTheftActive": false
@@ -86,8 +96,8 @@
       "modelId": "model_basic",
       "status": "Active",
       "batteryLevel": 92,
-      "lastLocation": "10.8139, 106.6675",
-      "currentUserId": null,
+      "lastLocation": "21.0134, 105.5272",
+      "currentUserId": "2",
       "isAntiTheftActive": false
     },
     {
@@ -95,24 +105,27 @@
       "modelId": "model_plus",
       "status": "Active",
       "batteryLevel": 100,
-      "lastLocation": "10.8145, 106.6680",
-      "isAntiTheftActive": false
+      "lastLocation": "21.0140, 105.5265",
+      "isAntiTheftActive": false,
+      "currentUserId": null
     },
     {
       "id": "SBE-004",
       "modelId": "model_pro",
-      "status": "Maintenance",
-      "batteryLevel": 40,
-      "lastLocation": "10.8150, 106.6682",
-      "isAntiTheftActive": false
+      "status": "Active",
+      "batteryLevel": 100,
+      "lastLocation": "21.0131, 105.5262",
+      "isAntiTheftActive": false,
+      "currentUserId": "101"
     },
     {
       "id": "SBE-005",
       "modelId": "model_pro",
       "status": "Active",
       "batteryLevel": 100,
-      "lastLocation": "10.8142, 106.6690",
-      "isAntiTheftActive": false
+      "lastLocation": "21.0142, 105.5270",
+      "isAntiTheftActive": false,
+      "currentUserId": "102"
     }
   ],
   "trips": [
@@ -185,7 +198,8 @@
       "id": "trip_1762360049492",
       "bikeId": "SBE-001",
       "userId": "1",
-      "startTime": "2025-11-05T16:27:29.492Z"
+      "startTime": "2025-11-05T16:27:29.492Z",
+      "endTime": "2025-11-11T14:53:26.240Z"
     },
     {
       "id": "trip_1762360525041",
@@ -207,6 +221,20 @@
       "userId": "1",
       "startTime": "2025-11-06T14:44:22.149Z",
       "endTime": "2025-11-06T14:44:44.136Z"
+    },
+    {
+      "id": "trip_1762872810099",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-11T14:53:30.099Z",
+      "endTime": "2025-11-11T14:53:41.121Z"
+    },
+    {
+      "id": "trip_1762873266961",
+      "bikeId": "SBE-001",
+      "userId": "1",
+      "startTime": "2025-11-11T15:01:06.961Z",
+      "endTime": "2025-11-11T15:09:25.872Z"
     }
   ],
   "maintenance": [
@@ -491,6 +519,215 @@
       "currency": "USD",
       "status": "Paid",
       "createdAt": "2025-11-06T14:44:44.147Z"
+    },
+    {
+      "id": "pay_1762872821134",
+      "userId": "1",
+      "tripId": "trip_1762872810099",
+      "amount": 0.05,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-11T14:53:41.134Z"
+    },
+    {
+      "id": "pay_1762873765883",
+      "userId": "1",
+      "tripId": "trip_1762873266961",
+      "amount": 0.45,
+      "currency": "USD",
+      "status": "Paid",
+      "createdAt": "2025-11-11T15:09:25.883Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "audit_1762872788412",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T14:53:08.412Z",
+      "userId": "1",
+      "bikeId": "SBE-001",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762872791002",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T14:53:11.002Z",
+      "userId": "2",
+      "bikeId": "SBE-002",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762872792545",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T14:53:12.545Z",
+      "userId": "101",
+      "bikeId": "SBE-003",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762872793788",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T14:53:13.788Z",
+      "userId": "102",
+      "bikeId": "SBE-005",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762875301046",
+      "action": "user.unlink_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:35:01.046Z",
+      "userId": "1",
+      "bikeId": "SBE-001"
+    },
+    {
+      "id": "audit_1762875429077",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:37:09.077Z",
+      "userId": "1",
+      "bikeId": "SBE-001",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762875621301",
+      "action": "user.unlink_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:40:21.301Z",
+      "userId": "1",
+      "bikeId": "SBE-001"
+    },
+    {
+      "id": "audit_1762875624670",
+      "action": "user.unlink_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:40:24.670Z",
+      "userId": "2",
+      "bikeId": "SBE-002"
+    },
+    {
+      "id": "audit_1762875628342",
+      "action": "user.unlink_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:40:28.342Z",
+      "userId": "101",
+      "bikeId": "SBE-003"
+    },
+    {
+      "id": "audit_1762875630394",
+      "action": "user.unlink_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:40:30.394Z",
+      "userId": "102",
+      "bikeId": "SBE-005"
+    },
+    {
+      "id": "audit_1762876208882",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:50:08.882Z",
+      "userId": "1",
+      "bikeId": "SBE-001",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762876212017",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:50:12.017Z",
+      "userId": "2",
+      "bikeId": "SBE-002",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762876215352",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:50:15.352Z",
+      "userId": "101",
+      "bikeId": "SBE-004",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762876217682",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:50:17.682Z",
+      "userId": "102",
+      "bikeId": "SBE-005",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762876363509",
+      "action": "user.unlink_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:52:43.509Z",
+      "userId": "1",
+      "bikeId": "SBE-001"
+    },
+    {
+      "id": "audit_1762876370207",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:52:50.207Z",
+      "userId": "1",
+      "bikeId": "SBE-001",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762876385946",
+      "action": "user.unlink_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:53:05.946Z",
+      "userId": "1",
+      "bikeId": "SBE-001"
+    },
+    {
+      "id": "audit_1762876389909",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:53:09.909Z",
+      "userId": "1",
+      "bikeId": "SBE-001",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762876476096",
+      "action": "user.unlink_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:54:36.096Z",
+      "userId": "1",
+      "bikeId": "SBE-001"
+    },
+    {
+      "id": "audit_1762876482927",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:54:42.927Z",
+      "userId": "1",
+      "bikeId": "SBE-001",
+      "previousBikeId": null
+    },
+    {
+      "id": "audit_1762876494352",
+      "action": "user.unlink_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:54:54.352Z",
+      "userId": "1",
+      "bikeId": "SBE-001"
+    },
+    {
+      "id": "audit_1762876635103",
+      "action": "user.link_bike",
+      "adminId": "101",
+      "timestamp": "2025-11-11T15:57:15.103Z",
+      "userId": "1",
+      "bikeId": "SBE-001",
+      "previousBikeId": null
     }
   ],
   "geofences": [

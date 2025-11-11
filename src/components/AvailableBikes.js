@@ -1,44 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import BikeMap from './BikeMap'; 
+import { buildModelFeatureIndex, hasFeatureEnabled, getModelBadges } from '../utils/features';
+import { fetchBikes, fetchBikeModels, patchBike } from '../services/bikes';
+import { createTrip, patchTrip, fetchTripById } from '../services/trips';
+import { fetchUserById } from '../services/users';
 
 const API_URL = 'http://localhost:3001';
 
 function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
-    const [allBikes, setAllBikes] = useState([]);
-    const [filteredBikes, setFilteredBikes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [filterStatus, setFilterStatus] = useState('All');
-    const [showMap, setShowMap] = useState(false); 
+	const [linkedBikes, setLinkedBikes] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [showMap, setShowMap] = useState(false); 
+	const [modelIndex, setModelIndex] = useState({});
+	const [linkedBikeId, setLinkedBikeId] = useState(currentUser?.assignedBikeId || null);
 
-    // State cho Modal Báo cáo Sự cố
-    const [issueModalOpen, setIssueModalOpen] = React.useState(false);
-    const [selectedBike, setSelectedBike] = React.useState(null);
-    const [issueType, setIssueType] = React.useState('Flat Tire'); 
-    const [issueDesc, setIssueDesc] = React.useState(''); 
+	// State cho Modal Báo cáo Sự cố
+	const [issueModalOpen, setIssueModalOpen] = React.useState(false);
+	const [selectedBike, setSelectedBike] = React.useState(null);
+	const [issueType, setIssueType] = React.useState('Flat Tire'); 
+	const [issueDesc, setIssueDesc] = React.useState(''); 
 
-    useEffect(() => {
-        fetchAvailableBikes();
-    }, []);
+const fetchAvailableBikes = useCallback(async () => {
+		setLoading(true);
+		try {
+			const [bikesData, modelsData, userData] = await Promise.all([
+				fetchBikes(),
+				fetchBikeModels(),
+				currentUser?.id ? fetchUserById(currentUser.id) : Promise.resolve(null)
+			]);
+			const idx = buildModelFeatureIndex(modelsData);
+			setModelIndex(idx);
 
-    useEffect(() => {
-        let tempBikes = [...allBikes];
-        if (filterStatus !== 'All') {
-            tempBikes = tempBikes.filter(bike => bike.status === filterStatus);
-        }
-        setFilteredBikes(tempBikes);
-    }, [allBikes, filterStatus]);
+			if (currentUser?.role === 'Student') {
+				const linkedId = (userData?.assignedBikeId || currentUser.assignedBikeId || null);
+				setLinkedBikeId(linkedId || null);
+				const studentList = linkedId ? bikesData.filter(b => b.id === linkedId) : [];
+				setLinkedBikes(studentList);
+			} else {
+				// Admin / Technician see all bikes
+				setLinkedBikeId(null);
+				setLinkedBikes(bikesData);
+			}
+		} catch (error) { console.error("Error fetching available bikes:", error); }
+		setLoading(false);
+}, [currentUser]);
 
-
-    const fetchAvailableBikes = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`${API_URL}/bikes?_expand=bikeModel`);
-            setAllBikes(response.data);
-            setFilteredBikes(response.data); 
-        } catch (error) { console.error("Error fetching available bikes:", error); }
-        setLoading(false);
-    };
+useEffect(() => {
+	fetchAvailableBikes();
+}, [fetchAvailableBikes]);
 
     // Helper: Lấy nhãn Model (Basic/Plus/Pro)
     const getModelLabel = (bike) => {
@@ -70,9 +80,8 @@ function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
                     tripId = last?.id || null;
                 }
                 if (tripId) {
-                    const tripRes = await axios.get(`${API_URL}/trips/${tripId}`);
-                    const trip = tripRes.data;
-                    await axios.patch(`${API_URL}/trips/${tripId}`, { endTime });
+                    const trip = await fetchTripById(tripId);
+                    await patchTrip(tripId, { endTime });
                     const start = new Date(trip.startTime).getTime();
                     const end = new Date(endTime).getTime();
                     const minutes = Math.max(1, Math.ceil((end - start) / 60000));
@@ -89,7 +98,7 @@ function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
                         createdAt: new Date().toISOString() 
                     });
                 }
-                await axios.patch(`${API_URL}/bikes/${bike.id}`, { status: "Active", currentUserId: null, currentTripId: null, isAntiTheftActive: false });
+                await patchBike(bike.id, { status: "Active", currentUserId: null, currentTripId: null, isAntiTheftActive: false });
                 setMessage({ text: `Bike ${bike.id} locked. Payment created.`, type: 'info' });
                 fetchAvailableBikes(); 
             } catch (error) { 
@@ -102,8 +111,8 @@ function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
             try {
                 const startTime = new Date().toISOString();
                 const tripId = `trip_${Date.now()}`;
-                await axios.post(`${API_URL}/trips`, { id: tripId, bikeId: bike.id, userId: String(currentUser.id), startTime });
-                await axios.patch(`${API_URL}/bikes/${bike.id}`, { status: "In Use", currentUserId: currentUser.id, currentTripId: tripId, isAntiTheftActive: false });
+                await createTrip({ id: tripId, bikeId: bike.id, userId: String(currentUser.id), startTime });
+                await patchBike(bike.id, { status: "In Use", currentUserId: currentUser.id, currentTripId: tripId, isAntiTheftActive: false });
                 setMessage({ text: `Bike ${bike.id} unlocked. Trip started.`, type: 'info' });
                 fetchAvailableBikes(); 
             } catch (error) { 
@@ -220,33 +229,32 @@ function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
         }
     };
 
-    if (loading) return <p>Loading available bikes...</p>;
+	if (loading) return <p>Loading available bikes...</p>;
 
-    return (
-        <div>
-            <h2>Student: Available Bikes</h2>
+	const bikesForDisplay = linkedBikes;
 
-            <div className="filter-bar">
-                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                    <option value="All">All Statuses</option>
-                    <option value="Active">Active</option>
-                    <option value="In Use">In Use</option>
-                    <option value="Maintenance">Maintenance</option>
-                </select>
-                <button 
-                    onClick={() => setShowMap(!showMap)} 
-                    className="btn-secondary" 
-                    style={{marginLeft: 'auto'}}
-                >
-                    {showMap ? 'Hide Map' : 'Show Map'}
-                </button>
-            </div>
+	return (
+		<div>
+			<h2>Student: Available Bikes</h2>
 
-            {showMap && (
-                <div style={{marginTop: '20px'}}>
-                    <BikeMap bikes={filteredBikes} />
-                </div>
-            )}
+			{currentUser?.role === 'Student' && (!linkedBikeId || bikesForDisplay.length === 0) && (
+				<p>No bike assigned to your account yet. Please contact the administrator to link a smart bike.</p>
+			)}
+
+			<div className="filter-bar" style={{ justifyContent: 'flex-end' }}>
+				<button 
+					onClick={() => setShowMap(!showMap)} 
+					className="btn-secondary"
+				>
+					{showMap ? 'Hide Map' : 'Show Map'}
+				</button>
+			</div>
+
+			{showMap && (
+				<div style={{marginTop: '20px'}}>
+					<BikeMap bikes={bikesForDisplay} />
+				</div>
+			)}
 
             <table border="1">
                 <thead>
@@ -254,14 +262,14 @@ function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
                         <th>Image</th>
                         <th>Bike ID</th>
                         <th>Model</th>
+						<th>Features</th>
                         <th>Status</th>
                         <th>Battery</th>
-                        <th>Pro Features</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredBikes.map(bike => (
+                    {bikesForDisplay.map(bike => (
                         <tr key={bike.id}>
                             <td>
                                 <img 
@@ -273,16 +281,19 @@ function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
                                 />
                             </td>
                             <td>{bike.id}</td>
-                            <td>{getModelLabel(bike)}</td>
+							<td>{getModelLabel(bike)}</td>
+							<td>
+								{getModelBadges(modelIndex, bike.modelId).map(b => (
+									<span key={b} className="tag" style={{ marginRight: 4 }}>{b}</span>
+								))}
+							</td>
                             <td>{bike.status}</td>
                             <td>{bike.batteryLevel}%</td>
                             <td>
-                                {bike.modelId === 'model_pro' ? 'Solar/Phone Charging OK' : 'N/A'}
-                            </td>
-                            <td>
                                 {(() => {
                                     const isInUseByMe = bike.status === 'In Use' && String(bike.currentUserId) === String(currentUser.id);
-                                    const canUnlock = bike.status === 'Active';
+                                    const isLinkedToMe = String(linkedBikeId || currentUser.assignedBikeId || '') === String(bike.id);
+                                    const canUnlock = bike.status === 'Active' && isLinkedToMe;
                                     const actionAllowed = isInUseByMe || canUnlock;
                                     const buttonLabel = isInUseByMe ? 'Lock Bike' : (canUnlock ? 'Unlock Bike' : (bike.status === 'Maintenance' ? 'Unavailable (Maintenance)' : 'Unavailable'));
 
@@ -292,13 +303,13 @@ function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
                                                 onClick={() => handleToggleLock(bike)}
                                                 disabled={!actionAllowed}
                                                 className={isInUseByMe ? 'btn-secondary' : ''}
-                                                title={!actionAllowed ? `Cannot unlock while status is ${bike.status}` : ''}
+                                                title={!actionAllowed ? (bike.status === 'Active' && !isLinkedToMe ? 'This bike is not linked to your account.' : `Cannot unlock while status is ${bike.status}`) : ''}
                                             >
                                                 {buttonLabel}
                                             </button>
 
                                             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
-                                                {bike.status === 'Active' && (
+												{bike.status === 'Active' && hasFeatureEnabled(modelIndex, bike.modelId, 'hasAntiTheft') && (
                                                     <button
                                                         className={bike.isAntiTheftActive ? 'btn-warning' : 'btn-secondary'}
                                                         onClick={() => handleToggleAntiTheft(bike)}
@@ -306,7 +317,7 @@ function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
                                                         {bike.isAntiTheftActive ? 'Anti-Theft: ON' : 'Anti-Theft: OFF'}
                                                     </button>
                                                 )}
-                                                {bike.isAntiTheftActive && (
+												{bike.isAntiTheftActive && hasFeatureEnabled(modelIndex, bike.modelId, 'hasAntiTheft') && (
                                                     <button
                                                         className="btn-danger"
                                                         onClick={() => handleSimulateMovement(bike)}
@@ -316,7 +327,7 @@ function AvailableBikes({ currentUser, setMessage, setViewingImage }) {
                                                     </button>
                                                 )}
                                                 
-                                                {(bike.status === 'Active' || isInUseByMe) && (
+                                                {(isInUseByMe || (bike.status === 'Active' && isLinkedToMe)) && (
                                                     <button onClick={() => showIssueModal(bike)} className="btn-warning">Report Issue</button>
                                                 )}
                                             </div>

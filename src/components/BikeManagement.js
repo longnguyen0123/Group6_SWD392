@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from './Pagination'; // ⭐️ 1. Import
+import { buildModelFeatureIndex, getModelBadges } from '../utils/features';
+import { fetchBikes as apiFetchBikes, fetchBikeModels, addBike, updateBike, patchBike as patchBikeSvc, deleteBike as deleteBikeSvc } from '../services/bikes';
 
 const API_URL = 'http://localhost:3001';
 
@@ -43,6 +45,7 @@ function BikeManagement({ setMessage, setViewingImage }) {
     const [currentBike, setCurrentBike] = useState(null);
     const [searchTerm, setSearchTerm] = useState(''); 
     const [filterStatus, setFilterStatus] = useState('All'); 
+	const [modelIndex, setModelIndex] = useState({});
 
     // ⭐️ 2. State cho Phân trang
     const [currentPage, setCurrentPage] = useState(1);
@@ -74,11 +77,15 @@ function BikeManagement({ setMessage, setViewingImage }) {
         setCurrentPage(1); // ⭐️ 3. Reset về trang 1 khi filter
     }, [allBikes, searchTerm, filterStatus]);
 
-    const fetchBikes = async () => {
+	const fetchBikes = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${API_URL}/bikes`);
-            setAllBikes(response.data); 
+			const [bikesData, modelsData] = await Promise.all([
+				apiFetchBikes(),
+				fetchBikeModels()
+			]);
+			setAllBikes(bikesData); 
+			setModelIndex(buildModelFeatureIndex(modelsData));
         } catch (error) { 
             console.error("Error fetching bikes:", error); 
         }
@@ -92,8 +99,8 @@ function BikeManagement({ setMessage, setViewingImage }) {
             return;
         }
         if (window.confirm(`Are you sure you want to delete ${bikeId}?`)) {
-            try {
-                await axios.delete(`${API_URL}/bikes/${bikeId}`);
+			try {
+				await deleteBikeSvc(bikeId);
                 setMessage({ text: `Bike ${bikeId} deleted successfully.`, type: 'info' });
                 fetchBikes(); 
             } catch (error) { console.error("Error deleting bike:", error); }
@@ -102,9 +109,14 @@ function BikeManagement({ setMessage, setViewingImage }) {
     
     const handleAddBike = async (e) => {
         e.preventDefault();
+		// Prevent duplicate Bike ID
+		if (allBikes.some(b => String(b.id).toLowerCase() === String(newBikeId).toLowerCase())) {
+			setMessage({ text: `Bike ID ${newBikeId} already exists.`, type: 'error' });
+			return;
+		}
         const bikeData = { id: newBikeId, modelId: newBikeModel, status: "Active", batteryLevel: 100, lastLocation: "FPT University Campus", isAntiTheftActive: false };
         try {
-            await axios.post(`${API_URL}/bikes`, bikeData);
+			await addBike(bikeData);
             setMessage({ text: 'New bike added successfully!', type: 'success' });
             fetchBikes(); 
             setNewBikeId(''); 
@@ -119,7 +131,7 @@ function BikeManagement({ setMessage, setViewingImage }) {
     
     const handleSaveEdit = async (bikeData) => {
         try {
-            await axios.put(`${API_URL}/bikes/${bikeData.id}`, bikeData);
+			await updateBike(bikeData.id, bikeData);
             setMessage({ text: `Bike ${bikeData.id} updated!`, type: 'success' });
             setIsEditing(false);
             setCurrentBike(null);
@@ -129,8 +141,8 @@ function BikeManagement({ setMessage, setViewingImage }) {
 
     const handleRemoteLock = async (bike) => {
         if (window.confirm(`Remote lock bike ${bike.id}? This will set status to Maintenance.`)) {
-            try {
-                await axios.patch(`${API_URL}/bikes/${bike.id}`, { status: 'Maintenance' });
+			try {
+				await patchBikeSvc(bike.id, { status: 'Maintenance' });
                 setMessage({ text: `Bike ${bike.id} remote-locked.`, type: 'info' });
                 fetchBikes();
             } catch (e) { console.error(e); setMessage({ text: 'Error performing remote lock', type: 'error' }); }
@@ -139,8 +151,8 @@ function BikeManagement({ setMessage, setViewingImage }) {
 
     const handleSetToActive = async (bike) => {
         if (window.confirm(`Set bike ${bike.id} to 'Active'? This will also set battery to 100%.`)) {
-            try {
-                await axios.patch(`${API_URL}/bikes/${bike.id}`, { 
+			try {
+				await patchBikeSvc(bike.id, { 
                     status: 'Active',
                     batteryLevel: 100 
                 });
@@ -204,6 +216,7 @@ function BikeManagement({ setMessage, setViewingImage }) {
                         <th>Image</th>
                         <th>Bike ID</th>
                         <th>Model ID</th>
+						<th>Features</th>
                         <th>Status</th>
                         <th>Battery</th>
                         <th>Location</th>
@@ -225,6 +238,11 @@ function BikeManagement({ setMessage, setViewingImage }) {
                             </td>
                             <td>{bike.id}</td>
                             <td>{bike.modelId}</td>
+							<td>
+								{getModelBadges(modelIndex, bike.modelId).map(b => (
+									<span key={b} className="tag" style={{ marginRight: 4 }}>{b}</span>
+								))}
+							</td>
                             <td>{bike.status}</td>
                             <td>{bike.batteryLevel}%</td>
                             <td>{bike.lastLocation}</td>

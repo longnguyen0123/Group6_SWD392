@@ -17,6 +17,7 @@ import RealTimeMonitor from './components/RealTimeMonitor';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import Settings from './components/Settings';
 import RolesManagement from './components/RolesManagement';
+import AuditLogs from './components/AuditLogs';
 import './App.css';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css'; // ⭐️ THÊM MỚI (Import CSS cho bản đồ)
@@ -65,6 +66,13 @@ const Sidebar = ({ user, activeView, onNavigate, onLogout }) => {
                                 className={activeView === 'users' ? 'active' : ''}
                                 onClick={() => onNavigate('users')}>
                                 User Management
+                            </button>
+                        )}
+                        {user.role === 'Admin' && (
+                            <button 
+                                className={activeView === 'auditlogs' ? 'active' : ''}
+                                onClick={() => onNavigate('auditlogs')}>
+                                Audit Logs
                             </button>
                         )}
                         <button className={activeView === 'payments' ? 'active' : ''} onClick={() => onNavigate('payments')}>Payments</button>
@@ -164,6 +172,8 @@ const Content = ({ view, user, setMessage, setViewingImage, onUpdateUser }) => {
 
     if (view === 'roles')
         return <RolesManagement setMessage={setMessage} />;
+    if (view === 'auditlogs')
+        return <AuditLogs />;
 
     if (view === 'trips') 
         return <AllTripsReport />;

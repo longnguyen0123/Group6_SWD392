@@ -16,10 +16,11 @@ function Profile({ currentUser, setMessage, onUpdateUser }) {
     const handleSave = async (e) => {
         e.preventDefault();
         try {
-            await axios.patch(`${API_URL}/users/${currentUser.id}`, form);
+            // Do not allow changing email; only update fullName
+            await axios.patch(`${API_URL}/users/${currentUser.id}`, { fullName: form.fullName });
             setMessage({ text: 'Profile updated', type: 'success' });
             // refresh session user
-            const updated = { ...currentUser, ...form };
+            const updated = { ...currentUser, fullName: form.fullName };
             sessionStorage.setItem('sbe_user_session', JSON.stringify(updated));
             onUpdateUser(updated);
         } catch (e) { console.error(e); setMessage({ text: 'Error updating profile', type: 'error' }); }
@@ -37,7 +38,7 @@ function Profile({ currentUser, setMessage, onUpdateUser }) {
                 </div>
                 <div className="form-group">
                     <label>Email</label>
-                    <input value={form.email} onChange={e => setForm({...form, email: e.target.value})} required />
+                    <input value={form.email} readOnly disabled />
                 </div>
                 <div className="modal-actions">
                     <button type="submit">Save</button>
