@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import BikeMap from './BikeMap'; 
 import Pagination from './Pagination'; // ⭐️ 1. Import
-
-const API_URL = 'http://localhost:3001';
+import { fetchUserTrips } from '../services/trips';
+import { fetchBikes } from '../services/bikes';
 
 function MyJourneys({ currentUser }) { 
     const [trips, setTrips] = useState([]); // Danh sách lịch sử
@@ -19,13 +18,13 @@ function MyJourneys({ currentUser }) {
         const fetchAllData = async () => {
             setLoading(true);
             try {
-                const [tripsRes, bikesRes] = await Promise.all([
-                    axios.get(`${API_URL}/trips?userId=${currentUser.id}&endTime_ne=null&_sort=startTime&_order=desc`),
-                    axios.get(`${API_URL}/bikes`)
+                const [tripsData, bikesData] = await Promise.all([
+                    fetchUserTrips(currentUser.id),
+                    fetchBikes()
                 ]);
-                setTrips(tripsRes.data || []);
+                setTrips(tripsData || []);
                 
-                const currentActiveBike = (bikesRes.data || []).find(
+                const currentActiveBike = (bikesData || []).find(
                     (bike) => bike.status === "In Use" && String(bike.currentUserId) === String(currentUser.id)
                 );
                 setActiveBike(currentActiveBike || null);
