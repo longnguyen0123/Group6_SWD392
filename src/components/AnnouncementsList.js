@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
-const API_URL = 'http://localhost:3001';
+import { fetchAnnouncements } from '../services/announcementService';
 
 function AnnouncementsList() {
     const [items, setItems] = useState([]);
@@ -11,8 +9,13 @@ function AnnouncementsList() {
     useEffect(() => { fetch(); }, []);
 
     const fetch = async () => {
-        try { const res = await axios.get(`${API_URL}/announcements?visible=true&_sort=createdAt&_order=desc`); setItems(res.data || []); }
-        catch (e) { console.error(e); }
+        try {
+            const allAnnouncements = await fetchAnnouncements();
+            // Filter for visible announcements on the client side
+            setItems(allAnnouncements.filter(a => a.visible) || []);
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     return (
@@ -33,8 +36,8 @@ function AnnouncementsList() {
             {detailOpen && selected && (
                 <div className="modal-backdrop">
                     <div className="modal-card">
-                        <h2 style={{ marginTop:0 }}>{selected.title}</h2>
-                        <div style={{ color:'#444', marginBottom: 12 }}>{selected.content}</div>
+                        <h2 style={{ marginTop: 0 }}>{selected.title}</h2>
+                        <div style={{ color: '#444', marginBottom: 12 }}>{selected.content}</div>
                         <div className="announcement-meta">Created: {new Date(selected.createdAt).toLocaleString()} • Visible: {selected.visible ? 'Yes' : 'No'}</div>
                         <div className="modal-actions">
                             <button className="btn btn-secondary" onClick={() => { setDetailOpen(false); setSelected(null); }}>Close</button>
